@@ -4,6 +4,7 @@ import os
 
 #path = "/"
 dir_list = os.listdir()
+dir_list.sort()
 DynamicArraymkv=[]
 DynamicArraysrt=[]
 Pominietemkv=[]
@@ -37,6 +38,8 @@ for filename in dir_list:
         #os.system("ffmpeg -i {0} -f image2 -vf fps=fps=1 output%d.png".format(filename))
     else:
         continue
+
+
 #Problem=0
 #x=0
 #y=0
@@ -56,8 +59,9 @@ for mkv in DynamicArraymkv:
         if(mkv[:-13]==FolderNameNoBrackets and srt[:-16]==FolderNameNoBrackets and mkv[:-4]==srt[:-7]):
             DynamicArraymkvpaired.append(mkv)
             DynamicArraysrtpaired.append(srt)
-            print(mkv)
-            print(srt)
+            print(mkv+"          "+srt)
+            
+            
 
 Pominietemkv=DynamicArraymkv
 Pominietesrt=DynamicArraysrt
@@ -76,21 +80,30 @@ for i in DynamicArraysrtpaired:
 #print(Pominietemkv)
 #print(Pominietesrt)
 
-print("\nZignorowano:")
 
-for i in Pominietemkv:
-    print(i)
- 
-for i in Pominietesrt:
-    print(i)
-print("")
+
+if(len(Pominietemkv)==0 and len(Pominietesrt)==0):
+    print("Brak zignorowanych plikow")
+
+else:
+    print("\nZignorowano:")
+    for i in Pominietemkv:
+        print(i)
+    
+    for i in Pominietesrt:
+        print(i)
+    print("")
+
 
 i=0
 for filename in DynamicArraymkvpaired:   
     if (filename.endswith(".mkv") and i<len(DynamicArraymkvpaired)):
 
+        print("File is being converted to UTF-8 if necesserry...")
+        os.system("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
+        #print("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         print("Preparing "+ str(i+1) +" file",end = "") 
-        os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s ass -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
+        os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s ass -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+" - EmbeddedSubs.mkv\" -hide_banner -loglevel error")
         print("         done")
         #print ("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s srt -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
         i+=1
