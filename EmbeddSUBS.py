@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import ffmpy
 from array import array
 import os
@@ -103,7 +105,7 @@ for filename in DynamicArraymkvpaired:
         os.system("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         #print("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         print("Preparing "+ str(i+1) +" file",end = "") 
-        os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s ass -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+" - EmbeddedSubs.mkv\" -hide_banner -loglevel error")
+        os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s ass -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+".mkv\" -hide_banner -loglevel error")
         print("         done")
         #print ("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -c copy -c:s srt -metadata:s:s:0 language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
         i+=1
