@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import subprocess
+import shutil
 import ffmpy
 from array import array
 import os
@@ -16,11 +17,11 @@ Pominietesrt=[]
 DynamicArraymkvpaired=[]
 DynamicArraysrtpaired=[]
 
-string1=os.getcwd()
-string2=os.path.dirname(os.getcwd())
+pathforexec=os.getcwd()
+nameoffolder=os.path.dirname(os.getcwd())
 
-if string2 in string1:
-    FolderName=string1.replace(string2,'')[1:]
+if nameoffolder in pathforexec:
+    FolderName=pathforexec.replace(nameoffolder,'')[1:]
 
 FolderNameNoBrackets=FolderName[4:]
 
@@ -81,10 +82,17 @@ else:
 
 
 i=0
+
+
+
+if not os.path.exists("MKV_k8d_Backup"):
+    os.makedirs(pathforexec+"/MKV_k8d_Backup")
+
+
 for filename in DynamicArraymkvpaired:   
     if (filename.endswith(".mkv") and i<len(DynamicArraymkvpaired)):
 
-        print("CO WYPISALA KONSOLA:")
+        #print("CO WYPISALA KONSOLA:")
 
         ps = subprocess.Popen(("ffmpeg","-i",DynamicArraymkvpaired[i],"2>&1"), stderr=subprocess.PIPE)
         output = subprocess.check_output(('grep','Stream #'), stdin=ps.stderr)
@@ -94,11 +102,11 @@ for filename in DynamicArraymkvpaired:
 
         readfrom_output = output.decode("utf-8")
 
-        print("ile wystapilo Subtitle:")
-        print(readfrom_output.count('Subtitle'))
+        #print("ile wystapilo Subtitle:")
+        #print(readfrom_output.count('Subtitle'))
     
 
-        print("")
+        #print("")
         #ffmpeg -i "Boku no Hero academia - s02e03EmbeddedSubs.mkv" 2>&1 | grep "Subtitle:"
 
         print("File is being converted to UTF-8 if necesserry...")
@@ -106,7 +114,23 @@ for filename in DynamicArraymkvpaired:
         #print("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         print("Preparing "+ str(i+1) +" file",end = "") 
         os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -map 0 -map 1 -c copy -c:s ass -metadata:s:s:"+str(readfrom_output.count('Subtitle'))+" language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
-        print("         done")
+        print("                     done")
+        
+        # print("soruce:")
+        # print(pathforexec+"/"+DynamicArraymkvpaired[i])
+
+        # print("dest:")
+        # print(pathforexec+"/MKV_k8d_Backup"+DynamicArraymkvpaired[i])
+
+        # print("RENAME1:")
+        # print(pathforexec+"/"+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\"")
+
+        # print("RENAME2:")
+        # print("EmbeddedSubs.mkv\"",pathforexec+"/"+DynamicArraymkvpaired[i])
+
+
+        shutil.move(pathforexec+"/"+DynamicArraymkvpaired[i],pathforexec+"/MKV_k8d_Backup/"+DynamicArraymkvpaired[i])
+        os.rename(pathforexec+"/"+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv",pathforexec+"/"+DynamicArraymkvpaired[i])
         
 
         i+=1
