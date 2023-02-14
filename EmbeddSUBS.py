@@ -2,9 +2,20 @@
 
 import subprocess
 import shutil
+import sys
 import ffmpy
 from array import array
 import os
+
+if len(sys.argv) > 1 and sys.argv[1].startswith("-"):
+    argument = sys.argv[1][1:]
+else:
+    argument = 0
+
+if argument == "h" or argument == "help":
+    print("List of arguments:\n-d deletes all of subtitles in mkv")
+    sys.exit(0)
+
 
 #path = "/"
 dir_list = os.listdir()
@@ -108,6 +119,16 @@ for filename in DynamicArraymkvpaired:
 
         #print("")
         #ffmpeg -i "Boku no Hero academia - s02e03EmbeddedSubs.mkv" 2>&1 | grep "Subtitle:"
+        
+        if argument == "d":
+            print("Subtitles are being deleted...")
+            #ffmpeg -i "High School of the Dead - s01e01.mkv" -map 0 -c copy -sn "High School of the Dead - s01e01 - nosubs.mkv"
+            os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -map 0 -c copy -sn \""+DynamicArraymkvpaired[i][:-4]+"NoSubs.mkv\" -hide_banner -loglevel error")
+            
+            shutil.move(pathforexec+"/"+DynamicArraymkvpaired[i],pathforexec+"/MKV_k8d_Backup/"+DynamicArraymkvpaired[i])
+            
+            os.rename(pathforexec+"/"+DynamicArraymkvpaired[i][:-4]+"NoSubs.mkv",pathforexec+"/"+DynamicArraymkvpaired[i])
+            
 
         print("File is being converted to UTF-8 if necesserry...")
         os.system("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
@@ -128,8 +149,11 @@ for filename in DynamicArraymkvpaired:
         # print("RENAME2:")
         # print("EmbeddedSubs.mkv\"",pathforexec+"/"+DynamicArraymkvpaired[i])
 
-
-        shutil.move(pathforexec+"/"+DynamicArraymkvpaired[i],pathforexec+"/MKV_k8d_Backup/"+DynamicArraymkvpaired[i])
+        if argument == "d":
+            os.remove(pathforexec+"/"+DynamicArraymkvpaired[i])
+        else:
+            shutil.move(pathforexec+"/"+DynamicArraymkvpaired[i],pathforexec+"/MKV_k8d_Backup/"+DynamicArraymkvpaired[i])
+            
         os.rename(pathforexec+"/"+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv",pathforexec+"/"+DynamicArraymkvpaired[i])
         
 
