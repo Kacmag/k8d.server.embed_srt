@@ -13,7 +13,7 @@ else:
     argument = 0
 
 if argument == "h" or argument == "help":
-    print("List of arguments:\n-d deletes all of subtitles in mkv")
+    print("List of arguments:\n-d deletes all of subtitles in mkv\n-f uses old ffmpeg command\nDefault uses MKVTOOLNIX")
     sys.exit(0)
 
 
@@ -134,7 +134,20 @@ for filename in DynamicArraymkvpaired:
         os.system("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         #print("enca -x utf8 -L polish \""+(DynamicArraysrtpaired[i])+"\"")
         print("Preparing "+ str(i+1) +" file",end = "") 
-        os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -map 0 -map 1 -c copy -c:s ass -metadata:s:s:"+str(readfrom_output.count('Subtitle'))+" language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
+		
+        if argument == "f":
+            #print("\n")
+            #print("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -map 0 -map 1 -c copy -c:s ass -metadata:s:s:"+str(readfrom_output.count('Subtitle'))+" language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
+            #print("\n")
+            os.system("ffmpeg -i \""+(DynamicArraymkvpaired[i])+"\" -i \""+DynamicArraysrtpaired[i]+"\" -map 0 -map 1 -c copy -c:s ass -metadata:s:s:"+str(readfrom_output.count('Subtitle'))+" language=pol \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" -hide_banner -loglevel error")
+        else:
+            #mkvmerge -o Death Note (2006) - s01e01EmbeddedSubs.mkv --language 0:pol Death Note (2006) - s01e01.mkv --language 0:pol Death Note (2006) - s01e01.pl.srt --gui-mode |grep -i progress
+            #mkvmerge -o "Death Note (2006) - s01e01EmbeddedSubs.mkv" --language 0:pol "Death Note (2006) - s01e01.mkv" --language 0:pol "Death Note (2006) - s01e01.pl.srt" --gui-mode |grep -i progress
+            #print("\n")
+            #print("mkvmerge -o \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\ --language 0:pol "+DynamicArraymkvpaired[i]+"\" --language 0:pol "+DynamicArraysrtpaired[i]+"\" --gui-mode |grep -i progress")
+            #print("\n")
+            os.system("mkvmerge -o \""+DynamicArraymkvpaired[i][:-4]+"EmbeddedSubs.mkv\" --language 0:pol \""+(DynamicArraymkvpaired[i])+"\" --language 0:pol \""+DynamicArraysrtpaired[i]+"\" --gui-mode |grep -i progress")
+       
         print("                     done")
         
         # print("soruce:")
